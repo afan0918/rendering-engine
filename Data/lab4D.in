@@ -1,0 +1,15 @@
+800 800
+
+ambient 0.4 0.4 0.4
+viewport -1 1 -1 1
+background 0.7 0.8 1.0
+
+light 1 0.8 0.8 .8 0.0 100.0 100.0
+
+object psyduck.obj 0.9 0.9 0.8 0.9 0.2 1
+
+observer 0 100 250 0 100 0 0 0.1 1000 15
+
+display
+
+end
