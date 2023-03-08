@@ -21,7 +21,7 @@ make
 ## 功能概要
 
 * 光照模型
-```cpp=
+```cpp
 Vector3d shader(double _kd, double _ks, double n,
                 Vector3d view_pos, Vector3d eye_pos, Vector3d color,
                 Vector3d normal, Vector3d amb_light_intensity,
@@ -49,7 +49,7 @@ Vector3d shader(double _kd, double _ks, double n,
 }
 ```
 * 根據z-buffer進行計算
-```cpp=
+```cpp
             for (int j = x_min; j <= x_max; j++) {
                 for (int k = y_min; k <= y_max; k++) {
                     if (isInTriangle(points[0],
@@ -78,7 +78,7 @@ Vector3d shader(double _kd, double _ks, double n,
             }
 ```
 * shader (雖然說是shader，但感覺給的參數怪怪的，所以有部分乾脆自己土炮，但應該是對的)
-```cpp=
+```cpp
 Vector3d blinn_phong_shader(double _kd, double _ks, double n,
                             Vector3d view_pos, Vector3d eye_pos, const Vector3d color,
                             Vector3d normal, Vector3d amb_light_intensity,
@@ -154,3 +154,154 @@ Vector3d blinn_phong_shader(double _kd, double _ks, double n,
 * Math : 做一點數學運算
 * Main : 進行主要運算和繪製圖形
 * Shader : 放 shader 函數
+
+
+### 指令內容
+
+#### 註解(#)
+出現`#`時，不須執行該行的內容
+
+#### 開頭
+要注意開頭會給兩個數字，分別是`window`的`width`和`height`
+
+#### reset
+
+清除`transform_matrix`
+
+#### translate
+
+輸入的指令為 `translate x y z`
+
+`x` 代表沿著`x`軸移動`x`單位
+`y` 代表沿著`y`軸移動`y`單位
+`z` 代表沿著`z`軸移動`z`單位
+
+#### scale
+
+輸入的指令為 `scale x y z`
+
+`x` 代表沿著`x`軸縮放`x`單位
+`y` 代表沿著`y`軸縮放`y`單位
+`z` 代表沿著`z`軸縮放`z`單位
+
+#### rotate
+
+輸入的指令為 `rotate x y z`
+
+`x` 代表沿著`x`軸旋轉`x` 度
+`y` 代表沿著`y`軸旋轉`y` 度
+`z` 代表沿著`z`軸旋轉`z` 度
+
+:::warning
+規定先對`y` 軸旋轉，再來是 `z` 軸，最後 `x`軸。
+:::
+
+#### clearData
+
+清除所創建的物件(`obj`)
+
+#### clearScreen
+
+清除畫面
+
+#### viewport
+
+輸入的指令為 `view vxl vxr vyb vyt`
+
+因為經過 `perspective divide` 因此所有的圖形都會落在 $[-1,1] \times [-1,1]$所以 $(wxl,wyb) = (-1,-1)$
+$(wxr,wyt) = (1,1)$
+
+`vxl vxr vyb vyt`為映射後的位置
+
+簡單來說要符合 
+$$
+f(wxl,wyb) = (vxl,vyb)\\
+f(wxr,wyt) = (vxr,vyt)\\
+$$
+
+$$
+where \quad f:R^2\rightarrow R^2 \quad is \quad a \quad linear \quad transformation
+$$
+
+在`view`外面的圖形要做剪裁
+
+在 `display` 才需要畫圖
+
+#### object
+
+<span style="color:red;">***新增***</span> 指令為 `object obj Or Og Ob Kd Ks N`
+
+object 後面接的是檔案名稱，請把obj檔案內的所有的面都讀入你的`stack`中，並將圖形切成三角形(此次檔案只有四邊形及三角形)。
+
+`Or Og Ob` 為物體的顏色，色彩空間為`RGB`
+`Kd` 為漫反射係數
+`Ks` 為高光係數
+`N` 為光澤度 (`gloss`)
+
+
+#### observer
+
+指令為 `observer epx epy epz COIx COIy COIz Tilt Hither Yon Hav`
+
+設定攝影機的位置
+
+`epx epy epz` 為攝影機的 `x y z` 位置
+
+`COIx COIy COIz` 為攝影機看的點， 即 $forward = COI - ep$
+`Tilt` 為攝影機傾斜的角度。
+:::warning
+攝影機的 `forward`、`up`、`right` 應該是正交的。
+$right = forward\times up$
+:::
+
+`Hither` 為 `near` 的平面 
+`Yon` 為 `far` 的平面
+`Hav` 為 `FOV` 即 `field of view`
+
+#### display
+
+在做display的時候就做一次`clearScreen`
+
+:::info
+著色頻率使用`Flat Shading`
+:::
+
+
+請在每一次`display`東西出來時，加上`system("pause");`，或者其他更好的方法。
+
+
+:::warning
+`Linux` 沒有 `system("pause");`，可以使用`fgetc(stdin);`代替
+如果可以，寫成不需要 `fgetc(stdin);` 的形式更好。
+:::
+
+這次畫點的時候不需要 `height-y`。
+
+#### ambient 
+
+<span style="color:red;">***新增***</span> 指令為 `ambient KIr KIg KIb`
+
+`KIr KIg KIb` 為環境光係數 $K_aI_a$
+
+#### background 
+
+<span style="color:red;">***新增***</span> 指令為 `background Br Bg Bd`
+
+`Br Bg Bd` 為背景顏色
+
+#### light
+
+<span style="color:red;">***新增***</span> 指令為 `light index Ipr Ipg Ipb Ix Iy Iz`
+
+`index` 為第`index`支光源
+`Ipr Ipg Ipb` 為光源顏色
+`Ix Iy Iz` 為光原位置
+
+:::warning
+都是使用點光源
+:::
+
+
+#### end
+
+結束視窗
