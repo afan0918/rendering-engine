@@ -2,7 +2,7 @@
 #include <vector>
 #include <cfloat>
 
-#include <GLUT/glut.h>
+#include <GL/glut.h>
 #include "obj/OBJ_Loader.h"
 #include "Vector3d.h"
 #include "Triangle.h"

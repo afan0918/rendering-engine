@@ -11,11 +11,23 @@ https://github.com/Bly7/OBJ-Loader/blob/master/Source/OBJ_Loader.h
 ## build
 
 * 複製以下指令即可編譯
-```
+```shell
 mkdir build
 cd build
 cmake ..
 make
+```
+
+接下來給他Data資料夾中格式的資料
+```shell
+./Lab4 lab4D.in
+```
+
+如果是第一次運行的話，可能需要先下載openGL和glut
+
+```shell
+sudo apt-get install libgl1-mesa-dev
+sudo apt-get install freeglut3-dev
 ```
 
 ## 功能概要
